@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+
+  mqtt:
+    image: emqx/emqx:latest
+    container_name: mqtt-broker
+    ports:
+      - "1883:1883"
+      - "8883:8883"
+      - "18083:18083"
+    restart: always
+
+  db:
+    image: timescale/timescaledb-ha:pg14-latest
+    container_name: tracker-db
+    environment:
+      POSTGRES_USER: tracker
+      POSTGRES_PASSWORD: strongpassword
+      POSTGRES_DB: trackerdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - dbdata:/home/postgres/pgdata
+    restart: always
+
+  backend:
+    image: python:3.11
+    container_name: tracker-backend
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+    command: python worker.py
+    depends_on:
+      - mqtt
+      - db
+    restart: always
+
+volumes:
+  dbdata:

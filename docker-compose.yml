@@ -9,8 +9,14 @@ services:
       - "1883:1883"
       - "8883:8883"
       - "18083:18083"
+    volumes:
+      - ./certs:/opt/emqx/etc/certs
     environment:
       EMQX_ALLOW_ANONYMOUS: "false"
+      EMQX_LISTENERS__SSL__DEFAULT__BIND: 0.0.0.0:8883
+      EMQX_LISTENERS__SSL__DEFAULT__SSL_OPTIONS__CERTFILE: /opt/emqx/etc/certs/server.crt
+      EMQX_LISTENERS__SSL__DEFAULT__SSL_OPTIONS__KEYFILE: /opt/emqx/etc/certs/server.key
+      EMQX_LISTENERS__SSL__DEFAULT__SSL_OPTIONS__CACERTFILE: /opt/emqx/etc/certs/ca.crt
     restart: always
 
   db:

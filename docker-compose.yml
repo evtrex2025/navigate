@@ -12,7 +12,7 @@ services:
     restart: always
 
   db:
-    image: timescale/timescaledb-ha:pg14-latest
+    image: timescale/timescaledb:latest-pg14
     container_name: tracker-db
     environment:
       POSTGRES_USER: tracker
